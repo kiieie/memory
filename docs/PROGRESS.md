@@ -37,5 +37,8 @@
 | 본인확인 방식(PASS/NICE 정식 계약 여부) | T13 | MVP는 SMS OTP로 대체 가능하나 C형 정식 오픈 시 필수 |
 | 상호·사업자등록 | T14 | 알림톡 발신프로필 등록 선행 조건. 도메인은 확정(memory.2convert.org) |
 | GitHub Secrets 등록 + 서버 부트스트랩 실행 (사용자가 직접) | T14 | 안 하면 push해도 자동배포 안 됨. 절차: `docs/reference/deploy-ci.md` |
-| DNS: memory.2convert.org → 168.107.43.247 A레코드 확인 | T14 | 안 맞으면 Caddy 자동 TLS 발급 실패 |
 | oc2 서버 실제 CPU/RAM (`nproc`, `free -h`) | T1/T14 | infra-ops.md의 mem_limit 예산표가 Ampere A1(ARM, 2 OCPU/12GB) 전제라 실서버(x86_64)와 안 맞을 수 있음 |
+
+## 확인 완료
+
+- DNS: `memory.2convert.org` A레코드 → `168.107.43.247`, Cloudflare Proxy 꺼짐(DNS only) — Caddy 자동 TLS 발급 조건 충족 (2026-08-30)
