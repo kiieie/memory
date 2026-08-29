@@ -12,6 +12,9 @@ RUN npm run build
 FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
+# Docker가 컨테이너마다 $HOSTNAME=컨테이너ID를 자동 주입하는데, Next.js standalone
+# 서버가 이걸 bind 주소로 그대로 써서 loopback(127.0.0.1)에는 안 열리던 문제 → 명시로 덮어씀
+ENV HOSTNAME=0.0.0.0
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
