@@ -6,7 +6,7 @@
 
 | # | 작업 | 상태 | 완료일 | 비고 |
 |---|---|---|---|---|
-| T1 | 프로젝트 스캐폴딩 (레포 구조, Docker Compose arm64, Caddy, 헬스체크) | 진행중 | | 코드 작성 완료(backend/frontend 스켈레톤, compose, Caddyfile, .env.example, Makefile). Docker Desktop 없어 `docker compose up` 실기동 미검증. YAML 문법 검증 + backend py_compile은 통과. 완료 처리 전 실기동으로 healthz/readyz 확인 필요 |
+| T1 | 프로젝트 스캐폴딩 (레포 구조, Docker Compose, Caddy, 헬스체크) | 진행중 | | 실서버(`oc2`, x86_64)에서 실기동 중 arm64 강제가 원인인 `npm install` 빌드 실패 발견 → platform 고정 전부 제거(CLAUDE.md 절대규칙 9번 정정). docker compose up 재시도 중, healthz/readyz 확인 전 |
 | T2 | DB 스키마 + Alembic | 미착수 | | |
 | T3 | 인증 (OTP, 카카오 OAuth, JWT) | 미착수 | | |
 | T4 | 수신자·캡슐 CRUD | 미착수 | | |
@@ -38,3 +38,4 @@
 | 상호·사업자등록 | T14 | 알림톡 발신프로필 등록 선행 조건. 도메인은 확정(memory.2convert.org) |
 | GitHub Secrets 등록 + 서버 부트스트랩 실행 (사용자가 직접) | T14 | 안 하면 push해도 자동배포 안 됨. 절차: `docs/reference/deploy-ci.md` |
 | DNS: memory.2convert.org → 168.107.43.247 A레코드 확인 | T14 | 안 맞으면 Caddy 자동 TLS 발급 실패 |
+| oc2 서버 실제 CPU/RAM (`nproc`, `free -h`) | T1/T14 | infra-ops.md의 mem_limit 예산표가 Ampere A1(ARM, 2 OCPU/12GB) 전제라 실서버(x86_64)와 안 맞을 수 있음 |

@@ -31,7 +31,7 @@ backend/
 │  └─ core/  security.py  ratelimit.py  audit.py
 ├─ alembic/
 ├─ tests/
-├─ Dockerfile                 # FROM python:3.12-slim, platform linux/arm64
+├─ Dockerfile                 # FROM python:3.12-slim (platform 고정 없음, 실서버 x86_64)
 └─ pyproject.toml
 ```
 

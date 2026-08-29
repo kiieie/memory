@@ -33,7 +33,11 @@
    실패해도 사용자 플로우가 막히지 않게 graceful degradation을 넣는다.
 8. **스토리지 쿼터는 서버가 강제한다.** presign 발급 시점에 `storage_used_bytes` 검사. 프론트 검증만으로
    끝내지 않는다(우회 가능).
-9. **모든 컨테이너 이미지는 `linux/arm64`.** 대상 VM(Ampere A1)이 ARM이다. amd64 이미지는 그냥 안 뜬다.
+9. ~~모든 컨테이너 이미지는 `linux/arm64`~~ **정정(2026-08-30): 실제 배포 서버(`oc2`, 168.107.43.247)는 x86_64.**
+   원래 설계는 OCI Ampere A1(ARM) 전제였는데 실서버가 그게 아니었다 — `uname -m` 확인 결과 amd64였고,
+   arm64를 강제했다가 QEMU 에뮬레이션 위에서 `npm install`이 죽는 걸로 실제로 걸렸다. 지금은 platform 고정
+   없이 호스트 아키텍처 그대로 빌드한다(`docker-compose.yml`/`backend/Dockerfile`/`frontend/Dockerfile`).
+   Ampere A1 ARM 박스를 실제로 쓰게 되면 그때 다시 `--platform=linux/arm64`를 넣는다.
 10. **관리자도 본문은 못 본다.** 관리자 화면·API가 다루는 건 증명서와 메타데이터뿐이다.
 
 ---
@@ -47,7 +51,7 @@
 | 큐/스케줄 | Redis + RQ |
 | 프론트 | Next.js 15 App Router + TS + Tailwind |
 | 파일 저장 | OCI Object Storage (S3 호환, boto3, Presigned URL 방식) |
-| 배포 | Docker Compose, **linux/arm64** |
+| 배포 | Docker Compose, 서버 아키텍처 따라감(현재 x86_64, 원래 설계는 arm64 전제 — 절대규칙 9번 참고) |
 | 리버스 프록시 | Caddy |
 | AI 추론 | 외부 GPU 서버, OpenAI 호환 API(vLLM) |
 | 인증(MVP) | 카카오 OAuth + SMS OTP |

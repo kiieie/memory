@@ -8,8 +8,13 @@
 기존 한도 초과 인스턴스는 2026년 8월 18일 이후 종료 대상이라는 안내가 있었다. 블록 스토리지 200GB,
 아웃바운드 대역폭 월 10TB, AMD 마이크로 인스턴스 2대는 유지. 무료 티어에 GPU 없음.
 
-**설계 전제는 2 OCPU / 12GB.** T1/T14 착수 전 OCI 콘솔에서 실제 할당량을 다시 확인할 것 — 이 문서의
-숫자가 아니라 콘솔이 진실.
+**설계 전제는 2 OCPU / 12GB (Ampere A1, ARM).** T1/T14 착수 전 OCI 콘솔에서 실제 할당량을 다시 확인할 것 —
+이 문서의 숫자가 아니라 콘솔이 진실.
+
+⚠️ **정정(2026-08-30)**: 실제 배포 서버 `kiie@168.107.43.247`(`oc2`)는 `uname -m` 확인 결과 **x86_64**다.
+이 아래 인스턴스 구성/메모리 예산 표는 원래 Ampere A1(ARM) 전제로 짠 것이라 이 서버의 실제 CPU/RAM과
+안 맞을 수 있다. `nproc` / `free -h` 결과로 재확인 전까지는 이 표의 숫자를 그대로 믿지 말 것.
+컨테이너 이미지 platform 강제(arm64)는 이미 뺐다 — 절대규칙 9번(`CLAUDE.md`) 참고.
 
 ## 인스턴스 구성
 
@@ -58,7 +63,7 @@ Object Storage Always Free 한도는 약 20GB(Standard 10GB + Infrequent/Archive
 ## Docker Compose 구성 요지
 
 ```yaml
-# docker-compose.yml (platform: linux/arm64 필수)
+# docker-compose.yml (platform 고정 없음 — 실제 배포 서버가 x86_64라 뺐다. 위 정정 참고)
 services:
   caddy:      { image: caddy:2-alpine, ports: ["80:80","443:443"] }
   web:        { build: ./frontend, environment: [NEXT_PUBLIC_API_BASE] }
