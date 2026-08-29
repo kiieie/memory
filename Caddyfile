@@ -1,0 +1,13 @@
+# 로컬: SITE_ADDRESS=:80 (기본값, TLS 없음)
+# 프로덕션: SITE_ADDRESS=example.com (자동 TLS)
+{$SITE_ADDRESS}
+
+encode gzip
+
+handle /api/* {
+	reverse_proxy api:8000
+}
+
+handle {
+	reverse_proxy web:3000
+}

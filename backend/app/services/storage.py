@@ -1,0 +1,1 @@
+"""OCI Object Storage(S3 호환) presign 클라이언트. 구현: T6. 참조: docs/reference/api-spec.md#미디어-직접-업로드"""

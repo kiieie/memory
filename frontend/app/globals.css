@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 접근성 기준(60대 이상 타깃): 기본 폰트 18px */
+html {
+  font-size: 18px;
+}

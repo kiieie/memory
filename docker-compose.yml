@@ -1,0 +1,101 @@
+# 메모리 예산: docs/reference/infra-ops.md#인스턴스-구성 (Ampere A1, 2 OCPU/12GB 전제)
+# 전 서비스 platform: linux/arm64 고정 — amd64 이미지는 Ampere A1에서 안 뜬다.
+
+services:
+  caddy:
+    image: caddy:2-alpine
+    platform: linux/arm64
+    mem_limit: 128m
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+    environment:
+      SITE_ADDRESS: ${SITE_ADDRESS:-:80}
+    depends_on:
+      - web
+      - api
+
+  web:
+    build:
+      context: ./frontend
+    platform: linux/arm64
+    mem_limit: 512m
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_BASE: ${NEXT_PUBLIC_API_BASE:-/api/v1}
+
+  api:
+    build:
+      context: ./backend
+    platform: linux/arm64
+    mem_limit: 1500m
+    ports:
+      - "8000:8000"
+    env_file: .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  worker:
+    build:
+      context: ./backend
+    platform: linux/arm64
+    mem_limit: 1g
+    command: rq worker default ai --url ${REDIS_URL:-redis://redis:6379/0}
+    env_file: .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  scheduler:
+    build:
+      context: ./backend
+    platform: linux/arm64
+    mem_limit: 256m
+    command: python -m app.workers.scheduler
+    env_file: .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:16-alpine
+    platform: linux/arm64
+    mem_limit: 2g
+    command: postgres -c shared_buffers=512MB
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-lastletter}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-lastletter}
+      POSTGRES_DB: ${POSTGRES_DB:-lastletter}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-lastletter}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    platform: linux/arm64
+    mem_limit: 512m
+    command: redis-server --maxmemory 384mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  pgdata:
+  caddy_data:

@@ -1,0 +1,8 @@
+# Windows에서 커밋해도 리눅스 서버/컨테이너에서 실행되는 파일은 LF 고정.
+# CRLF로 나가면 bootstrap-server.sh가 서버에서 `$'\r': command not found`로 깨진다.
+*.sh text eol=lf
+Dockerfile text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+Caddyfile text eol=lf
+Makefile text eol=lf

@@ -1,0 +1,32 @@
+name: Deploy
+
+# main에 push되면 서버에 SSH 접속해 git pull + docker compose up -d --build.
+# 필요한 Repo Secrets (Settings > Secrets and variables > Actions):
+#   DEPLOY_HOST  = 168.107.43.247
+#   DEPLOY_USER  = kiie
+#   DEPLOY_PATH  = 서버 위 저장소 경로, 예: /home/kiie/lastletter
+#   DEPLOY_SSH_KEY = 배포 전용 개인키 (scripts/bootstrap-server.sh 참고, 사용자 개인 키 아님)
+# 서버 부트스트랩(최초 1회, git clone/.env 생성/docker 설치)은 scripts/bootstrap-server.sh를 사용자가 직접 실행.
+# 상세: docs/reference/deploy-ci.md
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH 키 준비
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "${{ secrets.DEPLOY_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: 서버에서 pull + 재기동
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes \
+            "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" \
+            "set -e; cd '${{ secrets.DEPLOY_PATH }}' && git pull --ff-only && docker compose up -d --build && docker image prune -f"
