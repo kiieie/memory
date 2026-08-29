@@ -1,6 +1,6 @@
 # CI/CD 자동배포 참조 (T14, 사용자 요청으로 조기 착수)
 
-대상 서버: `kiie@168.107.43.247` (도메인 `memory.2convert.org`). 저장소: `https://github.com/jklee78cn/memory`.
+대상 서버: `kiie@168.107.43.247` (도메인 `memory.2convert.org`). 저장소: `https://github.com/kiieie/memory`.
 
 이 자동배포는 순서상 T14 항목이지만 사용자 요청으로 T1 직후 먼저 구축했다. **git pull + docker compose up -d --build**
 이상은 하지 않는다 — DB 마이그레이션 자동 적용, 백업, 모니터링 알림은 아직 없음(T2/T14 나머지).

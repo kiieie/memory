@@ -98,7 +98,7 @@ ADMIN_ALERT_WEBHOOK
 
 대상 서버 `kiie@168.107.43.247` / 도메인 `memory.2convert.org`. main push 시 자동 배포 구성은
 `docs/reference/deploy-ci.md`, 워크플로는 `.github/workflows/deploy.yml`, 서버 최초 셋업은
-`scripts/bootstrap-server.sh`. 저장소: `https://github.com/jklee78cn/memory`.
+`scripts/bootstrap-server.sh`. 저장소: `https://github.com/kiieie/memory`.
 
 ## 모니터링
 

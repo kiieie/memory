@@ -12,7 +12,7 @@
 
 set -euo pipefail
 
-REPO_URL="https://github.com/jklee78cn/memory.git"
+REPO_URL="https://github.com/kiieie/memory.git"
 DEPLOY_PATH="$HOME/lastletter"
 
 echo "== 1) git / docker 설치 확인 =="

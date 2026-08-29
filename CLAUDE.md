@@ -8,7 +8,7 @@
 사용자 요청으로 조기 착수(`docs/reference/deploy-ci.md`). 진행 상황과 다음 작업은
 **`docs/PROGRESS.md`를 먼저 확인**한다.
 
-**저장소**: `https://github.com/jklee78cn/memory`. **배포 서버**: `kiie@168.107.43.247` (도메인 `memory.2convert.org`).
+**저장소**: `https://github.com/kiieie/memory`. **배포 서버**: `kiie@168.107.43.247` (도메인 `memory.2convert.org`).
 
 ---
 
