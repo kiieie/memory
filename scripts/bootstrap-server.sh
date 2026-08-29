@@ -19,10 +19,11 @@ echo "== 1) git / docker 설치 확인 =="
 if ! command -v git >/dev/null; then
   sudo apt-get update && sudo apt-get install -y git
 fi
-if ! command -v docker >/dev/null; then
+# docker 바이너리만 있고 compose 플러그인이 빠진 경우(distro 패키지로 깔린 경우 흔함)를 잡는다.
+if ! docker compose version >/dev/null 2>&1; then
   curl -fsSL https://get.docker.com | sudo sh   # arm64 자동 감지, compose plugin 포함
   sudo usermod -aG docker "$USER"
-  echo "!! docker 그룹 적용을 위해 재로그인(ssh 재접속) 후 이 스크립트를 다시 실행하세요."
+  echo "!! docker(+compose) 설치/그룹 적용을 위해 재로그인(ssh 재접속) 후 이 스크립트를 다시 실행하세요."
   exit 0
 fi
 
