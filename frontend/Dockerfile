@@ -17,7 +17,7 @@ COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s \
-  CMD wget -q -O /dev/null http://localhost:3000 || exit 1
+  CMD wget -q -O /dev/null http://127.0.0.1:3000 || exit 1
 
 EXPOSE 3000
 CMD ["node", "server.js"]
