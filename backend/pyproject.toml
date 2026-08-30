@@ -25,3 +25,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.ruff]
 line-length = 100
+
+[tool.ruff.lint]
+# B008: FastAPI의 Depends(...)를 인자 기본값에 쓰는 건 버그가 아니라 정해진 관용구.
+ignore = ["B008"]
