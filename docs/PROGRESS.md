@@ -6,7 +6,7 @@
 
 | # | 작업 | 상태 | 완료일 | 비고 |
 |---|---|---|---|---|
-| T1 | 프로젝트 스캐폴딩 (레포 구조, Docker Compose, Caddy, 헬스체크) | 진행중 | | 실서버(`oc2`, x86_64)에서 실기동 중 arm64 강제가 원인인 `npm install` 빌드 실패 발견 → platform 고정 전부 제거(CLAUDE.md 절대규칙 9번 정정). docker compose up 재시도 중, healthz/readyz 확인 전 |
+| T1 | 프로젝트 스캐폴딩 (레포 구조, Docker Compose, Caddy, 헬스체크) | 완료 | 2026-08-30 | 실서버(`oc2`, x86_64)에서 arm64 강제 제거 후 `docker compose up`, 전 컨테이너 healthy 확인. `web` 헬스체크는 두 겹 버그였음: ① `wget --spider`(HEAD)가 Next.js 15에서 TypeError 유발 → GET으로 변경 ② Next.js standalone이 Docker 자동주입 `$HOSTNAME`(컨테이너ID)으로 bind해 loopback 불통 → `ENV HOSTNAME=0.0.0.0` 명시로 해결. `healthz`/`readyz`/`web` 전부 200 확인 |
 | T2 | DB 스키마 + Alembic | 미착수 | | |
 | T3 | 인증 (OTP, 카카오 OAuth, JWT) | 미착수 | | |
 | T4 | 수신자·캡슐 CRUD | 미착수 | | |
@@ -25,8 +25,7 @@
 
 ## 다음 작업
 
-**T1 마무리** — Docker 설치된 환경에서 `make up` 후 `curl localhost:8000/healthz`, `curl localhost:8000/readyz`,
-`curl localhost:3000` 확인되면 상태를 `완료`로 바꾼다. 이후 **T2 DB 스키마 + Alembic**로 진행.
+**T2 DB 스키마 + Alembic** — `docs/reference/db-schema.md` 기준으로 착수.
 
 ## 미결 항목 (사용자 확인 필요 — 해당 작업 착수 전 반드시 질문)
 
