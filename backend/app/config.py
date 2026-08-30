@@ -32,6 +32,11 @@ class Settings(BaseSettings):
     # --- kakao oauth ---
     kakao_client_id: str = ""
     kakao_client_secret: str = ""
+    kakao_redirect_uri: str = ""
+
+    # --- auth cookie ---
+    # 로컬(http)에서 리프레시 쿠키 테스트하려면 .env에서 false로. 프로덕션은 Caddy가 TLS 종단하므로 true 유지.
+    cookie_secure: bool = True
 
     # --- AI (GPU 서버, OpenAI 호환) ---
     ai_base_url: str = "http://localhost:8001/v1"
