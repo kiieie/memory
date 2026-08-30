@@ -7,7 +7,7 @@
 | # | 작업 | 상태 | 완료일 | 비고 |
 |---|---|---|---|---|
 | T1 | 프로젝트 스캐폴딩 (레포 구조, Docker Compose, Caddy, 헬스체크) | 완료 | 2026-08-30 | 실서버(`oc2`, x86_64)에서 arm64 강제 제거 후 `docker compose up`, 전 컨테이너 healthy 확인. `web` 헬스체크는 두 겹 버그였음: ① `wget --spider`(HEAD)가 Next.js 15에서 TypeError 유발 → GET으로 변경 ② Next.js standalone이 Docker 자동주입 `$HOSTNAME`(컨테이너ID)으로 bind해 loopback 불통 → `ENV HOSTNAME=0.0.0.0` 명시로 해결. `healthz`/`readyz`/`web` 전부 200 확인 |
-| T2 | DB 스키마 + Alembic | 미착수 | | |
+| T2 | DB 스키마 + Alembic | 완료 | 2026-08-30 | `db-schema.md` DDL을 `app/db/models`(SQLAlchemy 2.0 ORM, 12개 테이블)로 그대로 옮기고 alembic(async 템플릿) 초기 리비전(`880330f5b08d_initial_schema.py`) 작성. 로컬에 Docker/live Postgres가 없어 ① ORM→DDL 컴파일 결과와 ② `alembic upgrade head --sql`(오프라인) 결과가 1:1 일치하는지로 교차검증, `alembic downgrade head:base --sql`로 역순 DROP도 확인. 실제 DB 적용 검증용으로 `backend/tests/test_migrations.py` 추가(라이브 Postgres 필요 — `make test`에서 실행) |
 | T3 | 인증 (OTP, 카카오 OAuth, JWT) | 미착수 | | |
 | T4 | 수신자·캡슐 CRUD | 미착수 | | |
 | T5 | 암호화 서비스 (봉투암호화, seal/unseal) | 미착수 | | |
@@ -25,7 +25,9 @@
 
 ## 다음 작업
 
-**T2 DB 스키마 + Alembic** — `docs/reference/db-schema.md` 기준으로 착수.
+**T3 인증 (OTP, 카카오 OAuth, JWT)** — `docs/reference/api-spec.md`(인증 섹션) 기준으로 착수.
+T2에서 만든 `docker compose exec api alembic upgrade head`를 실서버/로컬 Docker에서 한 번 실기동
+검증하는 게 T3 착수 전 남은 숙제(로컬에 Docker Desktop이 없어 이번엔 오프라인 SQL 검증으로 대체함).
 
 ## 미결 항목 (사용자 확인 필요 — 해당 작업 착수 전 반드시 질문)
 
