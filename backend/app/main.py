@@ -7,10 +7,12 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from sqlalchemy import text
 
+from app.api.v1 import api_router
 from app.config import settings
 from app.db.session import engine
 
 app = FastAPI(title="LastLetter API")
+app.include_router(api_router)
 
 
 @app.get("/healthz")
